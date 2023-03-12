@@ -5,6 +5,9 @@
     <title>sonzwon Django</title>
 </head>
 <body>
-    {{welcome_msg}}
+    {{user}}<br>
+    {% for i in params %}
+    {{i}}<br>
+    {% endfor %}
 </body>
 </html>
