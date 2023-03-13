@@ -1,23 +1,22 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from shortener.models import Users
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .forms import RegisterForm
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 def index(request):
     user = Users.objects.filter(username="admin").first()
-    # user = Users.objects.get(username="admin")
     email = user.email if user else "Anonymous User!"
     print(email)
     print(request.user.is_authenticated)
-    # if request.user.is_authenticated is False:
-    #     email = "Anonymous User!"
-    # print(email)
+    if request.user.is_authenticated is False:
+        email = "Anonymous User!"
+    print(email)
     return render(request, "base.html", {"welcome_msg" : f"Hello {email}"})
 
-# def redirect_test(requset):
-#     print("Go Redirect")
-#     return redirect("index")
+
 
 @csrf_exempt
 def get_user(request, user_id):
@@ -34,3 +33,19 @@ def get_user(request, user_id):
         
         return JsonResponse(dict(msg="You just reached with Post Method!"))
 
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        msg = "올바르지 않은 데이터 입니다"
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get("username")
+            raw_password = form.cleaned_data.get("password1")
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            msg = "회원가입 완료"
+        return render(request, "register.html", {"form":form, "msg":msg})
+    else:
+        form = RegisterForm()
+        return render(request, "register.html", {"form":form})

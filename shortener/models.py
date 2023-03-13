@@ -10,8 +10,5 @@ class PayPlan(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
 
 class Users(AbstractUser):
-    pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING) 
-
-class UserDetail(models.Model):
-    user = models.OneToOneField(Users, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=30, null=True)
     pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING) 
