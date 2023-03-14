@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from shortener.models import Users
+from .models import Users
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import RegisterForm
@@ -43,9 +43,10 @@ def register(request):
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=raw_password)
+            
             login(request, user)
             msg = "회원가입 완료"
-        return render(request, "register.html", {"form":form, "msg":msg})
+        return render(request, "register.html", {"form": form, "msg": msg})
     else:
         form = RegisterForm()
-        return render(request, "register.html", {"form":form})
+        return render(request, "register.html", {"form": form})
