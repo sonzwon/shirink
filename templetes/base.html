@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>sonzwon Django</title>
-</head>
-<body>
-    {{user}}<br>
-    {% for i in params %}
-    {{i}}<br>
+  </head>
+  <body>
+    {{ user }} <br />
+    {% for i in params %} {{i}}<br />
     {% endfor %}
-</body>
+    {% if user.is_authenticated %}
+    <p><a href="{% url 'logout' %}">로그아웃</a></p>
+    {% else %}
+    <p><a href="{% url 'login' %}">로그인</a></p>
+    <p><a href="{% url 'register' %}">회원가입</a></p>
+    {% endif %}
+  </body>
 </html>
