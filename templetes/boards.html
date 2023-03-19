@@ -1,52 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>sonzwon Django</title>
-    </head>
-    <body>
+{% extends "base.html" %}
+{% block content %}
         <h2>유저리스트</h2>
         <h4>{% if msg %} {{msg}} {% endif %}</h4>
-        <table>
+        <table class="table">
             <thead>
-                <th>ID</th>
-                <th>유저이름</th>
-                <th>이메일</th>
-                <th>가입일</th>
-                <th>페이플랜</th>
-                <th>가격</th>
+                <th scope="col">ID</th>
+                <th scope="col">유저이름</th>
+                <th scope="col">이메일</th>
+                <th scope="col">가입일</th>
+                <th scope="col">페이플랜</th>
+                <th scope="col">가격</th>
             </thead>
             {% for u in users %}
-            <tr>
-                <td>{{u.id}}</td>
-                <td>{{u.username}}</td>
-                <td>{{u.email}}</td>
-                <td>{{u.date_joined}}</td>
-                <td>{{u.pay_plan.name}}</td>
-                <td>{{u.pay_plan.price}}</td>
-            </tr>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td>{{u.id}}</td>
+                    <td>{{u.username}}</td>
+                    <td>{{u.email}}</td>
+                    <td>{{u.date_joined}}</td>
+                    <td>{{u.pay_plan.name}}</td>
+                    <td>{{u.pay_plan.price}}</td>
+                </tr>
+            </tbody>
             {% endfor %}
             {% if not users %}
             <p>데이터가 없습니다</p>
             {% endif %}
         </table>
-        <nav>
-            <ul>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
                 {% if users.has_previous %}
-                <li>
-                    <a href="?p={{users.previous_page_number}}">이전으로</a>
+                <li class="page-item disabled">
+                    <a href="?p={{users.previous_page_number}}" class="page-link">이전으로</a>
                 </li>
                 {% endif %}
-                <li>
-                    <a href="#">{{users.number}}/{{users.paginator.num_pages}}</a>
+                <li class="page-item">
+                    <a href="#" class="page-link">{{users.number}}/{{users.paginator.num_pages}}</a>
                 </li>
                 {% if users.has_next %}
-                <li>
-                    <a href="?p={{users.next_page_number}}">다음으로</a>
+                <li class="page-item">
+                    <a href="?p={{users.next_page_number}}" class="page-link">다음으로</a>
                 </li>
                 {% else %}
-                <li>
-                    <a href="#">다음으로</a>
+                <li class="page-item">
+                    <a href="#" class="page-link">다음으로</a>
                 </li>
                 {% endif %}
             </ul>
@@ -55,5 +52,5 @@
             <a href="{% url 'index' %}">홈으로</a>
             <a href="{% url 'register' %}">회원가입</a>
         </p>
-    </body>
-</html>
+        {% include "include_test.html" %}
+        {% blockend %}
