@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load custom_tags %}
 {% block content %}
         <h2>유저리스트</h2>
         <h4>{% if msg %} {{msg}} {% endif %}</h4>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <th scope="col">ID</th>
                 <th scope="col">유저이름</th>
@@ -16,7 +17,7 @@
                 <tr>
                     <td>{{u.id}}</td>
                     <td>{{u.username}}</td>
-                    <td>{{u.email}}</td>
+                    <td>{{u.email|email_ma}}</td>
                     <td>{{u.date_joined}}</td>
                     <td>{{u.pay_plan.name}}</td>
                     <td>{{u.pay_plan.price}}</td>
@@ -30,7 +31,7 @@
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 {% if users.has_previous %}
-                <li class="page-item disabled">
+                <li class="page-item">
                     <a href="?p={{users.previous_page_number}}" class="page-link">이전으로</a>
                 </li>
                 {% endif %}
@@ -52,5 +53,6 @@
             <a href="{% url 'index' %}">홈으로</a>
             <a href="{% url 'register' %}">회원가입</a>
         </p>
+        {% test_tags %}
         {% include "include_test.html" %}
         {% blockend %}
