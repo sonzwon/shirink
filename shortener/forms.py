@@ -16,15 +16,3 @@ class RegisterForm(UserCreationForm):
             "password1",
             "password2",
         )
-
-class AuthenticationForm(UserCreationForm):
-    username = forms.CharField(max_length=30, required=False)
-    password = forms.CharField(max_length=30, required=False)
-
-    class Meta:
-        model = Users
-        fields = (
-            "username",
-            "password1",
-            "password2"
-        )

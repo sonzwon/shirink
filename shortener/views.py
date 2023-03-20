@@ -1,8 +1,9 @@
 from django.shortcuts import redirect, render
-from .models import Users
+from shortener.models import Users
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from shortener.forms import RegisterForm, AuthenticationForm
+from shortener.forms import RegisterForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -73,11 +74,10 @@ def logout_view(request):
     logout(request)
     return redirect("index")
 
-@login_required
+# @login_required
 def list_view(request):
     page = int(request.GET.get("p", 1))
     users = Users.objects.all().order_by("-id")
     paginator = Paginator(users, 10)
     users = paginator.get_page(page)
-
     return render(request, "boards.html", {"user": users})

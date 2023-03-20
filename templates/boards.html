@@ -12,7 +12,7 @@
                 <th scope="col">페이플랜</th>
                 <th scope="col">가격</th>
             </thead>
-            {% for u in users %}
+            {% for u in user %}
             <tbody class="table-group-divider">
                 <tr>
                     <td>{{u.id}}</td>
@@ -24,27 +24,31 @@
                 </tr>
             </tbody>
             {% endfor %}
-            {% if not users %}
+            {% if not user %}
             <p>데이터가 없습니다</p>
             {% endif %}
         </table>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                {% if users.has_previous %}
+                {% if user.has_previous %}
                 <li class="page-item">
-                    <a href="?p={{users.previous_page_number}}" class="page-link">이전으로</a>
-                </li>
-                {% endif %}
-                <li class="page-item">
-                    <a href="#" class="page-link">{{users.number}}/{{users.paginator.num_pages}}</a>
-                </li>
-                {% if users.has_next %}
-                <li class="page-item">
-                    <a href="?p={{users.next_page_number}}" class="page-link">다음으로</a>
+                    <a href="?p={{user.previous_page_number}}" class="page-link">이전페이지</a>
                 </li>
                 {% else %}
                 <li class="page-item">
-                    <a href="#" class="page-link">다음으로</a>
+                    <a href="#" class="page-link">이전페이지</a>
+                </li>
+                {% endif %}
+                <li class="page-item">
+                    <a href="#" class="page-link">{{user.number}}/{{user.paginator.num_pages}}</a>
+                </li>
+                {% if user.has_next %}
+                <li class="page-item">
+                    <a href="?p={{user.next_page_number}}" class="page-link">다음페이지</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a href="#" class="page-link">다음페이지</a>
                 </li>
                 {% endif %}
             </ul>
@@ -55,4 +59,4 @@
         </p>
         {% test_tags %}
         {% include "include_test.html" %}
-        {% blockend %}
+        {% endblock %}

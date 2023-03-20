@@ -27,7 +27,7 @@
   ></script>
   </head>
   <body>
-    {% block content %} {% blockend %} {{ user }} <br />
+    {% block content %} {% endblock %} {{ user }} <br />
     {% for i in params %} {{i}}<br />
     {% endfor %}
     {% if user.is_authenticated %}
