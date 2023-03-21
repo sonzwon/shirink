@@ -2,8 +2,7 @@ from django.shortcuts import redirect, render
 from shortener.models import Users
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from shortener.forms import RegisterForm
-from django.contrib.auth.forms import AuthenticationForm
+from shortener.forms import RegisterForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -31,7 +30,6 @@ def get_user(request, user_id):
         username = request.GET.get("username")
         if username:
             user = Users.objects.filter(pk=user_id).update(username=username)
-
         return JsonResponse(dict(msg="You just reached with Post Method!"))
 
 
@@ -53,27 +51,33 @@ def register(request):
 
 
 def login_view(request):
-    msg = None
     is_ok = False  #로그인 성공 여부
     if request.method == "POST":
-        form  = AuthenticationForm(request, request.POST)
+        form  = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=raw_password)
-            if user is not None:
-                login(request, user)
-                is_ok = True
-        else:
+            remember_me = form.cleaned_data.get("remember_me")
             msg = "올바른 ID와 패스워드를 입력하세요"
+            try:
+                user = Users.objects.get(email=email)
+            except Users.DoesNotExist:
+                msg = "올바른 ID와 패스워드를 입력하세요"
+            else:
+                if user.check_password(raw_password):
+                    msg = None
+                    login(request, user)
+                    is_ok = True
+                    request.session["remember_me"] = remember_me
+                    if not remember_me:
+                        request.session.set_expriy(0)
     else:
-        form = AuthenticationForm()
-    
-    for visible in form.visible_fields():
-        visible.field.widget.attrs["placeholder"] = "유저ID" if visible.name == "username" else "패스워드"
-        visible.field.widget.attrs["class"] = "form-control"
+        msg = None
+        form = LoginForm()
+    print("REMEMBER_ME:", request.session.get("remember_me"))
     return render(request, "login.html", {"form":form, "msg":msg, "is_ok":is_ok})
     
+
 
 def logout_view(request):
     logout(request)
