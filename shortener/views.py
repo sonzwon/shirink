@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from shortener.models import Users
-from django.http import JsonResponse
+from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from shortener.forms import RegisterForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
@@ -62,26 +62,29 @@ def login_view(request):
             try:
                 user = Users.objects.get(email=email)
             except Users.DoesNotExist:
-                msg = "올바른 ID와 패스워드를 입력하세요"
+                pass
             else:
                 if user.check_password(raw_password):
                     msg = None
                     login(request, user)
                     is_ok = True
                     request.session["remember_me"] = remember_me
-                    if not remember_me:
-                        request.session.set_expriy(0)
+
+                    # if not remember_me:
+                    #     request.session.set_expriy(0)
+                    # 브라우저를 닫았을 떄, 자동으로 세션을 종료시켜라 but, chrome 작동 x
     else:
         msg = None
         form = LoginForm()
     print("REMEMBER_ME:", request.session.get("remember_me"))
+    print(msg)
     return render(request, "login.html", {"form":form, "msg":msg, "is_ok":is_ok})
     
 
 
 def logout_view(request):
     logout(request)
-    return redirect("index")
+    return redirect("login")
 
 # @login_required
 def list_view(request):

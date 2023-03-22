@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from shortener.models import Users
+from django.forms.widgets import Widget
 
 class RegisterForm(UserCreationForm):
     full_name = forms.CharField(max_length=30, required=False, help_text="Optional.", label="이름")

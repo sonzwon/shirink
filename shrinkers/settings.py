@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'shortener.apps.ShortenerConfig',
     'debug_toolbar',
     'django_seed',
-    'django.contrib.sessions' ,
 ]
 
 INTERNAL_IPS = [
@@ -49,6 +48,9 @@ INTERNAL_IPS = [
 ]
 
 LOGIN_URL = "/login"
+
+ACCOUNT_SESSION_REMEMBER = True
+SESSION_COOKIE_AGE = 3600
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
 ]
 
 ROOT_URLCONF = 'shrinkers.urls'
