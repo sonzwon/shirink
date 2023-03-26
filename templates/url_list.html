@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}URL List{% endblock %}
+{% block main_breadscumb %}Dashboard{% endblock %}
+{% block sub_breadscumb_highlight %}URL list{% endblock %}
+{% block sub_breadscumb %}URL List{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="row align-items-conter"></div>
+            </div>
+            <div class="table-responsive">
+                <!--projects table-->
+                <table class="table align-items-center table-flush"
+                    <thead class="thead-light">
+                        <tr>
+                            <th scopo="col">별칭</th>
+                            <th scopo="col">이동 URL</th>
+                            <th scopo="col">단축 URL</th>
+                            <th scopo="col">생성채널</th>
+                            <th scopo="col">생성일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">zwon's project</th>
+                            <td>sonzwon.co.kr</td>
+                            <td>/a/123456</td>
+                            <td>웹사이트</td>
+                            <td>2023년 3월 26일</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
