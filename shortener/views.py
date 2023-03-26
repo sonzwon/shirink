@@ -1,11 +1,12 @@
 from django.shortcuts import redirect, render
-from shortener.models import Users
+from shortener.models import Users, ShortenedUrls
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from shortener.forms import RegisterForm, LoginForm
+from shortener.forms import RegisterForm, LoginForm, UrlCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 
 # Create your views here.
@@ -16,7 +17,10 @@ def index(request):
     # if request.user.is_authenticated is False:
     #     email = "Anonymous User!"
     # print(email)
-    return render(request, "base.html",)
+    return render(
+        request,
+        "base.html",
+    )
 
 
 @csrf_exempt
@@ -63,7 +67,7 @@ def login_view(request):
             try:
                 user = Users.objects.get(email=email)
             except Users.DoesNotExist:
-                msg = "올바른 유저ID와 패스워드를 입력하세요."
+                pass
             else:
                 if user.check_password(raw_password):
                     msg = None
@@ -95,4 +99,51 @@ def list_view(request):
 
 
 def url_list(request):
-    return render(request, "url_list.html")
+    get_list = ShortenedUrls.objects.order_by("-created_at").all()
+    return render(request, "url_list.html", {"list": get_list})
+
+
+@login_required
+def url_create(request):
+    msg = None
+    if request.method == "POST":
+        form = UrlCreateForm(request.POST)
+        if form.is_valid():
+            msg = f"{form.cleaned_data.get('nick_name')} 생성완료!"
+            messages.add_message(request, messages.INFO, msg)
+            form.save(request)
+            return redirect("url_list")
+        else:
+            form = UrlCreateForm()
+    else:
+        form = UrlCreateForm()
+    return render(request, "url_create.html", {"form": form})
+
+
+@login_required
+def url_change(request, action, url_id):
+    if request.method == "POST":
+        url_data = ShortenedUrls.objects.filter(id=url_id)
+        if url_data.exists():
+            if url_data.first().created_by_id != request.user.id:
+                msg = "자신이 소유하지 않은 URL입니다."
+            else:
+                if action == "delete":
+                    msg = f"{url_data.first().nick_name} 삭제완료!"
+                    url_data.delete()
+                    messages.add_message(request, messages.INFO, msg)
+                elif action == "update":
+                    msg = f"{url_data.first().nick_name} 수정완료!"
+                    form = UrlCreateForm()
+                    form.update_form(request, url_id)
+                    messages.add_message(request, messages.INFO, msg)
+
+        else:
+            msg = "해당 URL 정보를 찾을 수 없습니다."
+
+    elif request.method == "GET" and action == "update":
+        url_data = ShortenedUrls.objects.filter(pk=url_id).first()
+        form = UrlCreateForm()
+        return render(request, "url_create.html", {"form": form, "is_update": True})
+
+    return redirect("url_list")

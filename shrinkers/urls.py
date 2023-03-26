@@ -17,7 +17,7 @@ import debug_toolbar
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
-from shortener.views import index, get_user, register, login_view, logout_view, list_view, url_list
+from shortener.views import index, get_user, register, login_view, logout_view, list_view, url_list, url_create
 
 
 urlpatterns = [
@@ -30,4 +30,5 @@ urlpatterns = [
     path("logout/", logout_view, name="logout"),
     path("list/", list_view, name="list_view"),
     path("url_list", url_list, name="url_list"),
+    path("url_create", url_create, name="url_create"),
 ]
