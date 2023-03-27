@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}URL List{% endblock %}
-{% block sub_breadscumb_highlight %}URL 리스트{% endblock %}
+{% block sub_breadscumb_highlight %}URL List{% endblock %}
 {% block main_breadscumb %}대시보드{% endblock %}
 {% block sub_breadscumb %}URL 리스트{% endblock %}
 {% block content %}
@@ -33,13 +33,13 @@
                             <th scope="row">{{ l.nick_name }}</th>
                             <td>{{ l.target_url }}</td>
                             <td>{{ l.shortened_url }}</td>
-                            <td>{{ l.create_via }}</td>
-                            <td>{{ l.create_at }}</td>
+                            <td>{{ l.created_via }}</td>
+                            <td>{{ l.created_at }}</td>
                             <td>
-                                <form action="/urls/delete/{{l.id}}" method="post">
-                                    {% csrf_token %}
-                                    <a href="/urls/update/{{i.id}}" class="btn btn-sm btn-primary">
-                                        수정
+                                <form action="/urls/delete/{{ l.id }}" method="POST">
+                                {% csrf_token %}
+                                    <a href="/urls/update/{{ l.id }}" class="btn btn-sm btn-primary">
+                                    수정
                                     </a>
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">
                                     삭제

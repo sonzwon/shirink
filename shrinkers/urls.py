@@ -32,14 +32,14 @@ from shortener.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("__debug__/", include(debug_toolbar.urls)),
     path("", index, name="index"),
     path("register", register, name="register"),
-    path("__debug__/", include(debug_toolbar.urls)),
-    path("get_user/<int:user_id>", get_user),
     path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
+    path("get_user/<int:user_id>", get_user),
     path("list/", list_view, name="list_view"),
-    path("urls", url_list, name="url_list"),
+    path("urls/", url_list, name="url_list"),
     path("urls/create", url_create, name="url_create"),
     path("urls/<str:action>/<int:url_id>", url_change, name="url_change"),
 ]

@@ -1,8 +1,8 @@
+from urllib.parse import urlparse
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from shortener.models import Users, ShortenedUrls
 from django.forms.widgets import Widget
-from urllib.parse import urlparse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -51,17 +51,17 @@ class UrlCreateForm(forms.ModelForm):
             "target_url": forms.TextInput(attrs={"class": "form-control", "placeholder": "포워딩될 URL"}),
         }
 
-        def save(self, request, commit=True):
-            instance = super(UrlCreateForm, self).save(commit=False)
-            instance.created_by_id = request.user.id
-            instance.target_url = instance.target_url.strip()
-            if commit:
-                instance.save()
-            return instance
+    def save(self, request, commit=True):
+        instance = super(UrlCreateForm, self).save(commit=False)
+        instance.created_by_id = request.user.id
+        instance.target_url = instance.target_url.strip()
+        if commit:
+            instance.save()
+        return instance
 
-        def update_form(self, request, url_id):
-            instance = super(UrlCreateForm, self).save(commit=False)
-            instance.target_url = instance.target_url.strip()
-            ShortenedUrls.objects.filter(pk=url_id, created_by_id=request.user.id).update(
-                target_url=instance.target_url, nick_name=instance.nick_name
-            )
+    def update_form(self, request, url_id):
+        instance = super(UrlCreateForm, self).save(commit=False)
+        instance.target_url = instance.target_url.strip()
+        ShortenedUrls.objects.filter(pk=url_id, created_by_id=request.user.id).update(
+            target_url=instance.target_url, nick_name=instance.nick_name
+        )
