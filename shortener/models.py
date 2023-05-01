@@ -30,8 +30,6 @@ class Organization(TimeStampedModel):
     name = models.CharField(max_length=50)
     industry = models.CharField(max_length=15, choices=Industries.choices, default=Industries.OTHERS)
     pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING, null=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
 
 
 class Users(models.Model):
@@ -72,5 +70,15 @@ class ShortenedUrls(TimeStampedModel):
     creator = models.ForeignKey(Users, on_delete=models.CASCADE)
     target_url = models.CharField(max_length=2000)
     shortened_url = models.CharField(max_length=6, default=rand_string)
-    creat_via = models.CharField(max_length=8, choices=UrlCreateVia.choices, default=UrlCreateVia.WEBSITE)
+    create_via = models.CharField(max_length=8, choices=UrlCreateVia.choices, default=UrlCreateVia.WEBSITE)
     expired_at = models.DateTimeField(null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=[
+                    "prefix",
+                    "shortened_url",
+                ]
+            ),
+        ]

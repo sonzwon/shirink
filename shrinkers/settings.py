@@ -46,11 +46,6 @@ INSTALLED_APPS = [
     "shortener.apps.ShortenerConfig",
 ]
 
-# if DEBUG:
-#     INSTALLED_APPS += [
-#         'debug_toolbar',
-#         'django_seed',
-#     ]
 
 INTERNAL_IPS = [
     "127.0.0.1",

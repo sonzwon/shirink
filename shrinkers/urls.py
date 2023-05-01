@@ -19,30 +19,14 @@ Including another URLconf
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
-from shortener.views import (
-    index,
-    get_user,
-    register,
-    login_view,
-    logout_view,
-    list_view,
-    url_list,
-    url_create,
-    url_change,
-)
+from shortener.urls.views import url_redirect
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="index"),
-    path("register", register, name="register"),
-    path("login/", login_view, name="login"),
-    path("logout/", logout_view, name="logout"),
-    path("get_user/<int:user_id>", get_user),
-    path("list/", list_view, name="list_view"),
-    path("urls/", url_list, name="url_list"),
-    path("urls/create", url_create, name="url_create"),
-    path("urls/<str:action>/<int:url_id>", url_change, name="url_change"),
+    path("", include("shortener.index.urls")),
+    path("urls/", include("shortener.urls.urls")),
+    path("<str:prefix>/<str:url>", url_redirect),
 ]
 
 # if DEBUG:
