@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "shortener.apps.ShortenerConfig",
+    "django_user_agents",
 ]
 
 
@@ -64,12 +65,15 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_user_agents.middleware.UserAgentMiddleware",
 ]
 
 # if DEBUG:
 #     MIDDLEWARE += [
 #         'debug_toolbar.middleware.DebugToolbarMiddleware',
 #     ]
+
+GEOIP_PATH = os.path.join(BASE_DIR, "geolite2")
 
 
 ROOT_URLCONF = "shrinkers.urls"
