@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 import string
 import random
 from django.contrib.gis.geoip2 import GeoIP2
+from shortener.model_utils import dict_slice, dict_filter
+from typing import Dict
 
 # # Create your models here.
 
@@ -103,18 +105,22 @@ class Statistic(TimeStampedModel):
     device_os = models.CharField(max_length=30)
     country_code = models.CharField(max_length=2, default="XX")
     country_name = models.CharField(max_length=100, default="UNKNOWN")
+    custom_params = models.JSONField(null=True)
 
-    def record(self, request, url: ShortenedUrls):
+    def record(self, request, url: ShortenedUrls, params: Dict):
         self.shortened_url = url
         self.ip = request.META["REMOTE_ADDR"]
         self.web_browser = request.user_agent.browser.family
-        if request.user_agent.is_mobile:
-            self.device = self.ApproachDevice.MOBILE
-        elif request.user_agent.is_tablet:
-            self.device = self.ApproachDevice.TABLET
-        else:
-            self.device = self.ApproachDevice.PC
+        self.device = (
+            self.ApproachDevice.MOBILE
+            if request.user_agent.is_mobile
+            else self.ApproachDevice.TABLET
+            if request.user_agent.is_tablet
+            else self.ApproachDevice.PC
+        )
         self.device_os = request.user_agent.os.family
+        t = TrackingParams.get_tracking_params(url.id)
+        self.custom_params = dict_slice(dict_filter(params, t), 5)
         try:
             country = GeoIP2().country(self.ip)
             self.country_code = country.get("country_code", "XX")
@@ -124,3 +130,12 @@ class Statistic(TimeStampedModel):
 
         url.clicked()
         self.save()
+
+
+class TrackingParams(TimeStampedModel):
+    Shortened_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
+    params = models.CharField(max_length=20)
+
+    @classmethod
+    def get_tracking_params(cls, shortened_url_id):
+        return TrackingParams.objects.filter(shortened_url_id=shortened_url_id).values_list("params", flat=True)

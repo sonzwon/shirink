@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib import admin
 from shortener.index.views import index, register, login_view, logout_view, get_user, list_view
 
 

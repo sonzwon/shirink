@@ -1,21 +1,15 @@
 from django.shortcuts import redirect, render
-from shortener.models import Users
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from shortener.forms import RegisterForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from shortener.forms import RegisterForm, LoginForm
+from shortener.models import Users
 
 
 # Create your views here.
 def index(request):
-    # user = Users.objects.filter(id=request.user.id).first()
-    # email = user.email if user else "Anonymous User!"
-    # print("Logged in?", request.user.is_authenticated)
-    # if request.user.is_authenticated is False:
-    #     email = "Anonymous User!"
-    # print(email)
     return render(request, "base.html", {"welcome_msg": "HELLO"})
 
 
