@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 import string
 import random
-from django.contrib.gis.geoip2 import GeoIP2
-from shortener.model_utils import dict_slice, dict_filter
+from shortener.model_utils import dict_slice, dict_filter, location_finder
 from typing import Dict
+from django.db.models.base import Model
 
 # # Create your models here.
 
@@ -122,7 +122,7 @@ class Statistic(TimeStampedModel):
         t = TrackingParams.get_tracking_params(url.id)
         self.custom_params = dict_slice(dict_filter(params, t), 5)
         try:
-            country = GeoIP2().country(self.ip)
+            country = location_finder(request)
             self.country_code = country.get("country_code", "XX")
             self.country_name = country.get("country_name", "UNKNOWN")
         except:
@@ -133,9 +133,9 @@ class Statistic(TimeStampedModel):
 
 
 class TrackingParams(TimeStampedModel):
-    Shortened_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
+    shortened_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
     params = models.CharField(max_length=20)
 
     @classmethod
-    def get_tracking_params(cls, shortened_url_id):
-        return TrackingParams.objects.filter(shortened_url_id=shortened_url_id).values_list("params", flat=True)
+    def get_tracking_params(cls, shortened_url_id: int):
+        return cls.objects.filter(shortened_url_id=shortened_url_id).values_list("params", flat=True)

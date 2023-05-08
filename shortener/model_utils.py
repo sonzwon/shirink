@@ -1,5 +1,6 @@
 import itertools
 from typing import Dict, List
+from django.contrib.gis.geoip2 import GeoIP2
 
 
 def dict_filter(d: Dict, filter_list: List):
@@ -12,3 +13,7 @@ def dict_filter(d: Dict, filter_list: List):
 
 def dict_slice(d: Dict, n: int):
     return dict(itertools.islice(d.items(), n))
+
+
+def location_finder(request):
+    return GeoIP2().country(request)

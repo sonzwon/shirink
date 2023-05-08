@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django_ratelimit.decorators import ratelimit
 from django.contrib.gis.geoip2 import GeoIP2
+from django.db.models import Count
 
 
 @ratelimit(key="ip", rate="3/m")
@@ -28,6 +29,12 @@ def url_redirect(request, prefix, url):
 
 
 def url_list(request):
+    a = (
+        Statistic.objects.filter(shortened_url_id=4)
+        .values("custom_params__email_id")
+        .annotate(t=Count("custom_params__email_id"))
+    )
+    print(a)
     get_list = ShortenedUrls.objects.order_by("-created_at").all()
     return render(request, "url_list.html", {"list": get_list})
 
