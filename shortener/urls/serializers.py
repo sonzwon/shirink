@@ -26,13 +26,13 @@ class UrlListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UrlCreateSerializer(serializers.ModelSerializer):
+class UrlCreateSerializer(serializers.Serializer):
     nick_name = serializers.CharField(max_length=50)
     target_url = serializers.CharField(max_length=2000)
     category = serializers.IntegerField(required=False)
 
     def create(self, request, data, commit=True):
-        inst = ShortenedUrls
+        inst = ShortenedUrls()
         inst.creator_id = request.user.id
         inst.category = data.get("category", None)
         inst.target_url = data.get("target_url").strip()
