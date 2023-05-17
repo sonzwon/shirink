@@ -64,12 +64,15 @@ def login_view(request):
                     login(request, u.user)
                     is_ok = True
                     request.session["remember_me"] = remember_me
+                    return redirect("index")
 
                     # if not remember_me:
                     #     request.session.set_expirey(0)
     else:
         msg = None
         form = LoginForm()
+        if request.user.is_authenticated:
+            return redirect("index")
     return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 

@@ -58,6 +58,10 @@
         </div>
     </div>
 </div>
+<div id="vue_div">
+    <span>Hello Times: [[ HowManyTimes ]]</span>
+    <a class="btn btn-sm btn-primary text-white" @click="HowManyTimes += 1">say hello</a>
+</div>
 {% if messages %}
     {% for message in messages %}
     <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
@@ -79,4 +83,13 @@
         $('.toast').toast('show');
     </script>
 {% endif %}
+<script>
+    let vue = new Vue({
+        delimiters: ["[[","]]"],
+        el: "#vue_div",
+        data: {
+            HowManyTimes: 0
+        }
+    })
+    </script>
 {% endblock %}
