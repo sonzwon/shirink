@@ -29,12 +29,6 @@ def url_redirect(request, prefix, url):
 
 
 def url_list(request):
-    a = (
-        Statistic.objects.filter(shortened_url_id=4)
-        .values("custom_params__email_id")
-        .annotate(t=Count("custom_params__email_id"))
-    )
-    print(a)
     get_list = ShortenedUrls.objects.order_by("-created_at").filter(creator_id=request.user.id).all()
     return render(request, "url_list.html", {"list": get_list})
 

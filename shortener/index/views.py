@@ -65,9 +65,6 @@ def login_view(request):
                     is_ok = True
                     request.session["remember_me"] = remember_me
                     return redirect("index")
-
-                    # if not remember_me:
-                    #     request.session.set_expirey(0)
     else:
         msg = None
         form = LoginForm()

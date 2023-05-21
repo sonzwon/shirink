@@ -16,7 +16,7 @@
             </div>
             <div class="table-responsive">
                 <!--projects table-->
-                <table class="table align-items-center table-flush"
+                <table class="table align-items-center table-flush">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col">별칭</th>
@@ -29,10 +29,10 @@
                     </thead>
                     <tbody>
                         <tr v-for="l in urlLists">
-                            <th>[[l.nick_name]]</th>
+                            <th scope="row">[[l.nick_name]]</th>
                             <td>[[l.target_url]]</td>
                             <td>
-                                <a: href="'/'+ l.prefix + '/' + l.shortened_url" target="_blank">
+                                <a :href="'/'+ l.prefix + '/' + l.shortened_url" target="_blank">
                                     [[l.prefix | addressAssembler(l.shortened_url)]]
                                 </a>
                             </td>
@@ -42,7 +42,7 @@
                                 <button  class="btn btn-sm btn-primary">
                                     수정
                                 </button>
-                                <button @click="deleteUrl(l.id)" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">
+                                <button @click="deleteUrl(l.id)" class="btn btn-sm btn-danger" >
                                     삭제
                                 </button>
                             </td>
@@ -54,7 +54,7 @@
     </div>
 </div>
 <script>
-    let vue = new Vue({
+    let vm = new Vue({
         delimiters: ["[[","]]"],
         el: "#vue_div",
         data: {
@@ -66,47 +66,48 @@
             this.getList();
         },
         methods: {
-            getList: function() {
+            getList: function () {
                 $("#vue_div").LoadingOverlay("show");
-                axios.get("/api/urls/",
-                ).then(function(response) {
+                axios.get(`/api/urls/`,
+                ).then(function (response) {
                     vm.urlLists = response.data
-                }).catch(function(e) {
-                }).finally(function() {
-                    $("#vue_div").LoadingOverlay("hide");
+                }).catch(function (e) {
+                }).finally(function () {
+                $("#vue_div").LoadingOverlay("hide");
                 });
             },
-            deleteUrl: function(urlID) {
-                const c = confirm("정말 삭제하시겠습니까?");
+            deleteUrl: function (urlId) {
+                const c = confirm('정말 삭제 하시겠습니까?');
                 if (!c) return;
-                axios.delete("api/urls/${urlID}", {headers: {"X-CSRToken": Cookies.get("csrftoken")}}
-                ).then(function(response) {
-                }).catch(function(e) {
-                }).finally(function() {
-                    vm.getList();
+                axios.delete(`/api/urls/${urlId}`, {headers: {'X-CSRFToken': Cookies.get('csrftoken')}}
+                ).then(function (response) {
+                }).catch(function (e) {
+                }).finally(function () {
+                vm.getList();
                 });
             },
-            getCookie: function(name) {
+            getCookie: function (name) {
                 let cookieValue = null;
-                if (document.cookie && document.cookie != "") {
-                    var cookies = document.cookie.split(";");
-                    for (var i=0; i<cookies.length; i++) {
-                        var cookie = cookies[i].trim();
-                        if (cookie.substring(0, name.length+1)==(name+"=")) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length+1));
-                            break;
+                if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
                         }
                     }
                 }
             }
         },
         filters: {
-            addressAssembler: function(v, arg) {
+            addressAssembler: function (v, arg) {
                 const url = new URL(document.URL);
                 const host = url.host;
-                return "${host}/${v}/${arg}"
+                return `${host}/${v}/${arg}`
             }
-        }
+        },
     })
-    </script>
+</script>
 {% endblock %}

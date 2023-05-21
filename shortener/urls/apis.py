@@ -39,6 +39,7 @@ class UrlListView(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         """DELETE METHOD"""
         queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
+        print(pk, request.user.id)
         if not queryset.exists():
             raise Http404
         queryset.delete()
@@ -47,7 +48,7 @@ class UrlListView(viewsets.ModelViewSet):
 
     def list(self, request):
         """GET ALL"""
-        queryset = self.get_queryset().all()
+        queryset = self.get_queryset().filter(creator_id=request.user.id).all()
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
 
