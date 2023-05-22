@@ -24,6 +24,7 @@
                             <th scope="col">단축 URL</th>
                             <th scope="col">생성채널</th>
                             <th scope="col">생성일</th>
+                            <th scope="col">클릭수</th>
                             <th scope="col">액션</th>
                         </tr>
                     </thead>
@@ -38,6 +39,13 @@
                             </td>
                             <td>[[l.create_via]]</td>
                             <td>[[l.created_at]]</td>
+                            <td>
+                                [[l.click]]
+                                <a :href="'/urls/' + l.id + '/statistic'">
+                                    <i class="ni ni-chart-bar-32 ml-2" style="cursor: pointer;"></i>
+                                </a>
+                                
+                            </td>
                             <td>
                                 <button  class="btn btn-sm btn-primary">
                                     수정
