@@ -19,12 +19,12 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card-body">
-            <!--chart-->
-            <div class="chart">
-                <!--chart wrapper-->
-                <canvas id="chart-visits-dark" class="chart-canvas"></canvas>
+            <div class="card-body">
+                <!--chart-->
+                <div class="chart">
+                    <!--chart wrapper-->
+                    <canvas id="chart-visits-dark" class="chart-canvas"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -41,27 +41,27 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="table-responsive">
-            <!-- Projects table -->
-            <table class="table align-items-center table-flush">
-                <thead class="thead-light">
-                    <tr>
-                    <th scope="col">Browser</th>
-                    <th scope="col">Visitor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="b in browserStatList">
-                        <th scope="row">
-                            [[b.web_browser]]
-                        </th>
-                        <td>
-                            [[b.count]]
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <!-- Projects table -->
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                        <tr>
+                        <th scope="col">Browser</th>
+                        <th scope="col">Visitor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="b in browserStatList">
+                            <th scope="row">
+                                [[b.web_browser]]
+                            </th>
+                            <td>
+                                [[b.count]]
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -71,30 +71,69 @@
         delimiters: ["[[","]]"],
         el: "#vue_div",
         data: {
-            newUrlName: null,
+            url_id: {{url.id}},
             newUrlTarget: null,
-            urlLists: []
+            browserStatList: []
         },
+
         mounted() {
-            this.getList();
+            this.draw_visit_chart();
+            this.getBrowserStat();
         },
+
         methods: {
-            getList: function () {
-                $("#vue_div").LoadingOverlay("show");
-                axios.get(`/api/urls/`,
+            draw_visit_chart: function () {
+                var $chart = $('#chart-visits-dark');
+                function init($this) {
+                    var salesChart = new Chart($this, {
+                        type: 'line',
+                        option: {
+                            scales: {
+                                yAxes: [{
+                                    gridLines: {
+                                        color: Charts.colors.gray[700],
+                                        zeroLineColor: Charts.colors.gray[700]
+                                    },
+                                    ticks: {
+
+                                    }
+                                }]
+                            }
+                        },
+                        data: {
+                            labels: {{date_list|safe|escape}},
+                            datasets: [{
+                                label: 'Clicks',
+                                data: {{click_list|safe|escape}}
+                            }]
+                        }
+                    });
+                    // save to JQuery object
+                    $this.data('chart', salesChart)
+                };
+
+                // Event
+                if ($chart.length) {
+                    init($chart);
+                }
+            },
+            getBrowserStat: function () {
+                axios.get(`/api/urls/${this.url_id}/get_browser_stats/`, 
                 ).then(function (response) {
-                    vm.urlLists = response.data
+                    vm.browserStatList = response.data
                 }).catch(function (e) {
                 }).finally(function () {
-                $("#vue_div").LoadingOverlay("hide");
                 });
             },
+            add_today: function () {
+                axios.get(`/api/urls/${this.url_id}/add_browser_today/`,
+                ).then(function (response) {
+                }).catch(function (e) {
+                }).finally(function () {
+                    vm.getBrowserStat();
+                });
+            }
         }
     })
 </script>
-
-
-
-
-
 {% endblock %}

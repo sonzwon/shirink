@@ -8,6 +8,7 @@ from django_ratelimit.decorators import ratelimit
 from django.contrib.gis.geoip2 import GeoIP2
 from django.db.models import Count
 from datetime import datetime, timedelta
+from django.utils.html import json_script
 
 
 @ratelimit(key="ip", rate="3/m")
@@ -25,7 +26,6 @@ def url_redirect(request, prefix, url):
     custom_params = request.GET.dict() if request.GET.dict() else None
     history = Statistic()
     history.record(request, get_url, custom_params)
-
     return redirect(target, permanent=is_permanent)
 
 
@@ -87,13 +87,14 @@ def url_change(request, action, url_id):
 
 def statistic_view(request, url_id: int):
     url_info = get_object_or_404(ShortenedUrls, pk=url_id)
-    base_qs = Statistic.objects.filter(shortened_url_id=url_id, created_at__gte=get_kst() - timedelta(days=14))
+    base_qs = Statistic.objects.filter(shortened_url_id=url_id)
     clicks = (
         base_qs.values("created_at__date")
         .annotate(clicks=Count("id"))
         .values("created_at__date", "clicks")
         .order_by("created_at__date")
     )
+    print(f"clicks: {clicks}")
     date_list = [c.get("created_at__date").strftime("%Y-%m-%d") for c in clicks]
     click_list = [c.get("clicks") for c in clicks]
     return render(
