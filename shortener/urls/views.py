@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from django.utils.html import json_script
 
 
-@ratelimit(key="ip", rate="3/m")
+# @ratelimit(key="ip", rate="3/m")
 def url_redirect(request, prefix, url):
     was_limited = getattr(request, "limited", False)
     if was_limited:
@@ -19,11 +19,13 @@ def url_redirect(request, prefix, url):
     get_url = get_object_or_404(ShortenedUrls, prefix=prefix, shortened_url=url)
     is_permanent = False
     target = get_url.target_url
+    print(f"get_url: {target}")
     if get_url.creator.organization:
         is_permanent = True
     if not target.startswith("https://") and not target.startswith("http://"):
         target = "https://" + get_url.target_url
     custom_params = request.GET.dict() if request.GET.dict() else None
+    print(f"custom_params: {request.GET}")
     history = Statistic()
     history.record(request, get_url, custom_params)
     return redirect(target, permanent=is_permanent)

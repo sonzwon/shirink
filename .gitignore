@@ -1,0 +1,7 @@
+/venv/
+db.sqlite3
+/shortenr/migrations/
+__pycache__/
+/shrinkers/__pycache__
+.DS_Store
+/shrinkers/service_key.json
