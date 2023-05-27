@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 from google.oauth2 import service_account
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -156,15 +157,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-# STATIC_URL = "static/"
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.path.join(BASE_DIR, "shrinkers/service_key.json")
-)
-DEFAULT_FILE_STORAGE = "config.storage_backends.GoogleCloudMediaStorage"
-STATICFILES_STORAGE = "config.storage_backends.GoogleCloudStaticStorage"
-GS_STATIC_BUCKET_NAME = "shrinkers-bucket-fc"
-STATIC_URL = f"https://storage.googleapis.com/{GS_STATIC_BUCKET_NAME}/statics/"
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+try:
+    EMAIL_ID = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("email")
+    EMAIL_PW = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("email_pw")
+except Exception:
+    EMAIL_ID = None
+    EMAIL_PW = None
+
+
+if DEBUG:
+    STATIC_URL = "static/"
+else:
+    SECRET_KEY = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("service_key")
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(SECRET_KEY)
+    STORAGES = {
+        "default": {"BACKEND": "config.storage_backends.GoogleCloudMediaStorage"},
+        "staticfiles": {"BACKEND": "config.storage_backends.GoogleCloudStaticStorage"},
+    }
+    GS_BUCKET_NAME = "shrinkers-sonzwon"
+    STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/statics/"
+    # Default primary key field type
+    # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
