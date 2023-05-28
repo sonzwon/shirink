@@ -76,6 +76,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_user_agents.middleware.UserAgentMiddleware",
+    "shortener.middleware.ShrinkersMiddleware",
 ]
 
 # if DEBUG:
@@ -157,19 +158,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-try:
-    EMAIL_ID = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("email")
-    EMAIL_PW = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("email_pw")
-except Exception:
-    EMAIL_ID = None
-    EMAIL_PW = None
+# try:
+#     EMAIL_ID = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("email")
+#     EMAIL_PW = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("email_pw")
+# except Exception:
+#     EMAIL_ID = None
+#     EMAIL_PW = None
 
 
 if DEBUG:
     STATIC_URL = "static/"
 else:
-    SECRET_KEY = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("service_key")
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(SECRET_KEY)
+    # SECRET_KEY = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("service_key")
+    # GS_CREDENTIALS = service_account.Credentials.from_service_account_info(SECRET_KEY)
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        os.path.join(BASE_DIR, "shrinkers/service_key.json")
+    )
     STORAGES = {
         "default": {"BACKEND": "config.storage_backends.GoogleCloudMediaStorage"},
         "staticfiles": {"BACKEND": "config.storage_backends.GoogleCloudStaticStorage"},
