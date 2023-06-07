@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from shortener.models import Users, ShortenedUrls
+from django.contrib.auth.models import User
 from django.forms.widgets import Widget
 from django.utils.translation import gettext_lazy as _
 from shortener.utils import url_count_changer
@@ -14,7 +15,7 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text="Required. Inform a valid email address.", label="이메일")
 
     class Meta:
-        model = Users
+        model = User
         fields = (
             "username",
             "full_name",

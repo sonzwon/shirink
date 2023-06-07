@@ -164,24 +164,23 @@ USE_TZ = True
 # except Exception:
 #     EMAIL_ID = None
 #     EMAIL_PW = None
-
-
-if DEBUG:
-    STATIC_URL = "static/"
-else:
-    # SECRET_KEY = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("service_key")
-    # GS_CREDENTIALS = service_account.Credentials.from_service_account_info(SECRET_KEY)
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        os.path.join(BASE_DIR, "shrinkers/service_key.json")
-    )
-    STORAGES = {
-        "default": {"BACKEND": "config.storage_backends.GoogleCloudMediaStorage"},
-        "staticfiles": {"BACKEND": "config.storage_backends.GoogleCloudStaticStorage"},
-    }
-    GS_BUCKET_NAME = "shrinkers-sonzwon"
-    STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/statics/"
-    # Default primary key field type
-    # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+STATIC_URL = "static/"
+# if DEBUG:
+#     STATIC_URL = "static/"
+# else:
+#     # SECRET_KEY = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("service_key")
+#     # GS_CREDENTIALS = service_account.Credentials.from_service_account_info(SECRET_KEY)
+#     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+#         os.path.join(BASE_DIR, "shrinkers/service_key.json")
+#     )
+#     STORAGES = {
+#         "default": {"BACKEND": "config.storage_backends.GoogleCloudMediaStorage"},
+#         "staticfiles": {"BACKEND": "config.storage_backends.GoogleCloudStaticStorage"},
+#     }
+#     GS_BUCKET_NAME = "shrinkers-sonzwon"
+#     STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/statics/"
+#     # Default primary key field type
+#     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

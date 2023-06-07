@@ -1,16 +1,149 @@
+{% load static %}
+<!--
+
+=========================================================
+* Impact Design System - v1.0.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/impact-design-system
+* Copyright 2010 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/impact-design-system/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+-->
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>sonzwon Django</title>
-    </head>
-    <body>
-        <h2>회원가입</h2>
-        <h4>{%if msg%}{{msg}}{%endif%}</h4>
-        <form method="post">
-            {%csrf_token%} {{form.as_p}}
-            <button type="submit">가입하기</button>
-        </form>
-        <a href="{% url 'index' %}">홈으로</a>
-    </body>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+    <meta name="author" content="Creative Tim">
+    <title>Shrinkers | 로그인</title>
+      
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/nucleo/css/nucleo.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'assets/vendor/@fortawesome/fontawesome-free/css/all.min.css' %}" type="text/css">
+    <!-- Page plugins -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/fullcalendar/dist/fullcalendar.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/sweetalert2/dist/sweetalert2.min.css' %}">
+    <!-- Argon CSS -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" type="text/css">
+</head>
+
+<body class="bg-white">
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header py-7 py-lg-8 pt-lg-9">
+      <div class="container">
+        <div class="header-body text-center mb-7">
+          <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6 col-md-8 px-5">
+              <img src="{% static 'assets/img/shrinkers_logo-cutout.png' %}" height="35" class="navbar-brand-img" alt="...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <!--page content-->
+      <div class="container mt--9 pb-5 text-gray">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border border-soft mb-0">
+              <div class="card-header bg-transparent pb-5">
+                <div class="text-center mt-2 mb-3">
+                  <h1 class="text-black">회원가입</h1>
+                </div>
+                  <div class="card-body px-lg-5 py-lg-5">
+                    <div>
+                      {% if msg %}
+                      <p class="text-center text-sm text-danger">{{ msg }}</p>
+                      {% endif %}
+                      <form method="post" action="{% url 'register' %}">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                          <div class="input-group input-group-merge input-group-alternative">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="ni ni-user-run"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="username" id="username" value="{{ form.username.value|default_if_none:'username' }}">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="input-group input-group-merge input-group-alternative">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="full_name" id="full_name" value="{{ form.full_name.value|default_if_none:'full name' }}">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group input-group-merge input-group-alternative">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                              </div>
+                              <input type="email" class="form-control" name="email" id="email" value="{{ form.email.value|default_if_none:'email' }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group input-group-merge input-group-alternative">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                              </div>
+                              <input type="password" class="form-control" name="password" id="password" value="{{ form.password.value|default_if_none:'password' }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group input-group-merge input-group-alternative">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                              </div>
+                              <input type="password" class="form-control" name="password2" id="password2" value="{{ form.password2.value|default_if_none:'check password' }}">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                          <button type="submit" class="btn bg-primary text-white w-100 my-4 mb-2">submit</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page content -->
+    
+    <div class="container mt--9 pb-5 text-gray">
+      
+      <div class="row justify-content-center">
+        
+        <div class="col-lg-5 col-md-7">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Argon Scripts -->
+  <!-- Core -->
+  <script src="{% static 'assets/vendor/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/js-cookie/js.cookie.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js' %}"></script>
+  <!-- Argon JS -->
+  <script src="{% static 'assets/js/dashboard.js' %}?v=1.2.0"></script>
+  <!-- Demo JS - remove this in your project -->
+  <script src="{% static 'assets/js/demo.min.js' %}"></script>
+</body>
+
 </html>

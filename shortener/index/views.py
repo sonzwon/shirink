@@ -39,7 +39,7 @@ def register(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             msg = "회원가입완료"
-        return render(request, "register.html", {"form": form, "msg": msg})
+            return render(request, "register.html", {"form": form, "msg": msg})
     else:
         form = RegisterForm()
     return render(request, "register.html", {"form": form})
