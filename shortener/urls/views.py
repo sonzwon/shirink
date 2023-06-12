@@ -9,6 +9,7 @@ from django.contrib.gis.geoip2 import GeoIP2
 from django.db.models import Count
 from datetime import datetime, timedelta
 from django.utils.html import json_script
+from shortener.urls.telegram_handler import command_handler
 
 
 # @ratelimit(key="ip", rate="3/m")
@@ -32,8 +33,10 @@ def url_redirect(request, prefix, url):
 
 
 def url_list(request):
-    get_list = ShortenedUrls.objects.order_by("-created_at").filter(creator_id=request.user.id).all()
-    return render(request, "url_list.html", {"list": get_list})
+    command_handler()
+    return render(request, "url_list.html", {})
+    # get_list = ShortenedUrls.objects.order_by("-created_at").filter(creator_id=request.user.id).all()
+    # return render(request, "url_list.html", {"list": get_list})
 
 
 @login_required

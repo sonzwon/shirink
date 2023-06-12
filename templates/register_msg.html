@@ -63,55 +63,15 @@
                 </div>
                   <div class="card-body px-lg-5 py-lg-5">
                     <div>
-                      {% if msg %}
-                      <p class="text-center text-sm text-danger">{{ msg }}</p>
-                      {% endif %}
-                      <form method="post" action="{% url 'register' %}">
-                        {% csrf_token %}
-                        <div class="form-group mb-3">
-                          <div class="input-group input-group-merge input-group-alternative">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="ni ni-user-run"></i></span>
-                            </div>
-                            <input type="text" class="form-control" name="username" id="username" value="{{ form.username.value|default_if_none:'ID' }}">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="input-group input-group-merge input-group-alternative">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                            </div>
-                            <input type="text" class="form-control" name="full_name" id="full_name" value="{{ form.full_name.value|default_if_none:'이름' }}">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group input-group-merge input-group-alternative">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                              </div>
-                              <input type="email" class="form-control" name="email" id="email" value="{{ form.email.value|default_if_none:'이메일' }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group input-group-merge input-group-alternative">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                              </div>
-                              <input type="password" class="form-control" name="password" id="password" value="{{ form.password.value|default_if_none:'비밀번호' }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group input-group-merge input-group-alternative">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                              </div>
-                              <input type="password" class="form-control" name="password2" id="password2" value="{{ form.password2.value|default_if_none:'비밀번호 확인' }}">
-                            </div>
-                        </div>
-                        <div class="text-center">
-                          <button type="submit" class="btn bg-primary text-white w-100 my-4 mb-2">submit</button>
-                        </div>
-                    </form>
+                      <p class="text-center text-md text-success font-weight-bold">회원가입 완료 !</p>
+                      <div class="btn-wrapper text-center">
+                        <a href="{% url 'index' %}" class="btn btn-neutral btn-icon">
+                          <span class="btn-inner--text">홈으로</span>
+                        </a>
+                        <a href="{% url 'login' %}" class="btn btn-neutral btn-icon">
+                          <span class="btn-inner--text">로그인하기</span>
+                        </a>
+                      </div>
                   </div>
                 </div>
               </div>

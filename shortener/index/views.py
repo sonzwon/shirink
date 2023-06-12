@@ -34,12 +34,8 @@ def register(request):
         msg = "올바르지 않은 데이터 입니다."
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            msg = "회원가입완료"
-            return render(request, "register.html", {"form": form, "msg": msg})
+            return redirect("register_msg.html")
+        return render(request, "register_msg.html", {"form": form, "msg": msg})
     else:
         form = RegisterForm()
     return render(request, "register.html", {"form": form})
@@ -47,13 +43,15 @@ def register(request):
 
 def login_view(request):
     is_ok = False
+    if request.user.is_authenticated:
+        return redirect("index")
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password")
             remember_me = form.cleaned_data.get("remember_me")
-            msg = "올바른 유저ID와 패스워드를 입력하세요."
+            msg = "올바른 이메일과 패스워드를 입력하세요."
             try:
                 u = Users.objects.get(user__email=email)
             except Users.DoesNotExist:
@@ -68,9 +66,7 @@ def login_view(request):
     else:
         msg = None
         form = LoginForm()
-        if request.user.is_authenticated:
-            return redirect("index")
-    return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
+        return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 
 def logout_view(request):

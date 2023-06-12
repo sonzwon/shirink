@@ -6,3 +6,4 @@ __pycache__/
 .DS_Store
 /shrinkers/service_key.json
 .github/workflows/main.yml
+/shrinkers/telegram_access_token.json
