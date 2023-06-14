@@ -3,7 +3,7 @@ from django.db.models import F
 from rest_framework.response import Response
 from datetime import datetime, timedelta
 import yagmail
-# from shrinkers.settings import EMAIL_ID, EMAIL_PW
+from shrinkers.settings import EMAIL_ID, EMAIL_PW
 
 
 def url_count_changer(request, is_increase: bool):
@@ -33,10 +33,10 @@ email_content = """
 """
 
 
-# def send_email(**kwargs):
-#     mailing_list = kwargs.get("mailing_list", None)
-#     content = kwargs.get("content", None)
-#     if mailing_list and EMAIL_ID and EMAIL_PW:
-#         yag = yagmail.SMTP({EMAIL_ID: "shrinkers X sonzwon"}, EMAIL_PW)
-#         contents = [email_content.format(mailing_list[0])] if not content else content
-#         yag.send(mailing_list[1], "안녕하세요, 첫 이메일 입니다.", content)
+def send_email(**kwargs):
+    mailing_list = kwargs.get("mailing_list", None)
+    content = kwargs.get("content", None)
+    if mailing_list and EMAIL_ID and EMAIL_PW:
+        yag = yagmail.SMTP({EMAIL_ID: "shrinkers X sonzwon"}, EMAIL_PW)
+        contents = [email_content.format(mailing_list[0])] if not content else content
+        yag.send(mailing_list[1], "안녕하세요, 첫 이메일 입니다.", content)

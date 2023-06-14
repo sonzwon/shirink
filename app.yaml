@@ -1,6 +1,7 @@
+# APP ENGINE으로 갈 때 사용되는 확인 변수들
 runtime: python39
 
-instance_class: B4
+instance_class: B4 # 수동 스케일링하는 인스턴스 클래스 (F클래스들은 오토 스케일링)
 service: default
 
 env_variables:
