@@ -3,8 +3,8 @@ import requests
 from shortener.models import Schedules, ShortenedUrls, Users
 import json
 
-ACCESS_TOKEN = json.loads(open("./shrinkers/telegram_access_token.json")).get("access_token")
-
+# ACCESS_TOKEN = json.loads(open("./shrinkers/telegram_access_token.json")).get("access_token")
+ACCESS_TOKEN = "6242404645:AAGWeIj5_4nNzfbiMq-HaPweVzrk8PHy25w"
 
 
 def get_chats():

@@ -1,5 +1,121 @@
-{% extends "base.html" %}
-{% block content %}
-        <img src="{% static 'asset/img/waves.jfif'}" style="height: 100vh; overflow: hidden; object-fit: cover;"
-        
-{% endblock %}
+{% load static %}
+<!--
+
+=========================================================
+* Impact Design System - v1.0.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/impact-design-system
+* Copyright 2010 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/impact-design-system/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+    <meta name="author" content="Creative Tim">
+    <title>Welcome to Shrinkers !</title>
+      
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/nucleo/css/nucleo.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'assets/vendor/@fortawesome/fontawesome-free/css/all.min.css' %}" type="text/css">
+    <!-- Page plugins -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/fullcalendar/dist/fullcalendar.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/sweetalert2/dist/sweetalert2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/dist/css/bootstrap.min.css' %}">
+    <!-- Argon CSS -->
+    <!-- <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" type="text/css"> -->
+    <style>
+        body { background-image: url('./static/assets/img/wallpaperbetter.jpg');
+               background-size: auto;
+      }
+    </style>
+</head>
+
+<body>
+  <!-- Navigation bar -->
+  <!-- {% include 'includes/nav.html' %} -->
+  <!-- Main content -->
+  <nav class="navbar navbar-expand-md bg-white fixed-top b-7">
+    <!-- navbar-brand의 content 변경 -->
+    <img src="{% static 'assets/img/shrinkers_logo-cutout.png' %}" height="35" class="navbar-brand-img" alt="...">
+
+    <div class="collapse navbar-collapse">  
+      <ul class="navbar-nav mx-auto my-2">
+        <li class="nav-item">  
+          <a class="nav-link align-items-center mr-4 " href="#">Why Shrinkers?</a>  
+        </li> 
+        <li class="nav-item">  
+          <a class="nav-link d-flex align-items-center mr-4" href="#">Product</a>  
+        </li>  
+        <li class="nav-item">  
+          <a class="nav-link d-flex align-items-center mr-4 " href="#">Price</a>  
+        </li>
+        <li class="nav-item">  
+          <a class="nav-link d-flex align-items-center mr-4" href="#">Resources</a>  
+        </li>
+        <li class="nav-item">  
+          <a class="nav-link d-flex align-items-center" href="#">Contact</a>  
+        </li> 
+      </ul>
+      <a class="btn btn-primary text-center mr-4" href="{% url 'url_list' %}">대시보드 바로가기</a>
+      <a class="my-2 my-sm-0 mr-4" href="{% url 'login' %}">로그인</a>
+      <a class="my-2 my-sm-0" href="{% url 'register' %}">회원가입</a>
+    </div>
+  </nav>
+    <!--page content-->
+  <div class="main-content">
+    <div class="container mt-9 text-gray">
+
+      <div class="row justify-content-center">
+        <div class="col-lg col-md pb-4">
+          </div>
+        </div>
+      </div>
+      <div class="row gx-5 justify-content-center">
+          <h1 class="text-center text-white">Get Shortened URL</h1>
+      </div>
+      <div class="row justify-content-center">
+        <input class="text-center text-sm" style="width: 50vh;" placeholder="Put URL you want to create">
+        <button class="btn btn-primary" type="button" href="#">create</button>
+      </div>
+    </div>
+  </div>
+    
+
+  <!-- Argon Scripts -->
+  <!-- Core -->
+  <!-- <script src="{% static 'assets/vendor/jquery/dist/jquery.min.js' %}"></script> -->
+  <script src="{% static 'assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- <script src="{% static 'assets/vendor/js-cookie/js.cookie.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js' %}"></script> -->
+  <!-- Argon JS -->
+  <!-- <script src="{% static 'assets/js/dashboard.js' %}?v=1.2.0"></script> -->
+  <!-- Demo JS - remove this in your project -->
+  <script src="{% static 'assets/js/demo.min.js' %}"></script>
+  <script>
+    let vm = new Vue({
+        delimiters: ["[[","]]"],
+        el: "#vue_div",
+        data: {
+            newUrlName: null,
+            newUrlTarget: null,
+            urlLists: []
+        },
+    })
+  </script>
+</body>
+
+</html>

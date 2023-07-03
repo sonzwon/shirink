@@ -5,6 +5,8 @@ import random
 from shortener.model_utils import dict_slice, dict_filter, location_finder
 from typing import Dict
 from django.db.models.base import Model
+from django.contrib.gis.geoip2 import GeoIP2
+import qrcode
 
 # # Create your models here.
 
@@ -125,9 +127,8 @@ class Statistic(TimeStampedModel):
         if params:
             self.custom_params = dict_slice(dict_filter(params, t), 5)
         try:
-            country = location_finder(request)
-            self.country_code = country.get("country_code", "XX")
-            self.country_name = country.get("country_name", "UNKNOWN")
+            self.country_code = GeoIP2.country_code(request)
+            self.country_name = GeoIP2.country_name(request)
         except:
             pass
 
@@ -151,9 +152,46 @@ class TrackingParams(TimeStampedModel):
 
 
 class BackOfficeLogs(TimeStampedModel):
+    """
+    유저가 접속해서 요청을 날릴 때마다, 로그를 쌓아줌
+    """
+
     endpoint = models.CharField(max_length=2000, blank=True, null=True)
     body = models.JSONField(null=True)
     method = models.CharField(max_length=20, blank=True, null=True)
     user_id = models.IntegerField(blank=True, null=True)
     ip = models.CharField(max_length=30, blank=True, null=True)
     status_code = models.IntegerField(blank=True, null=True)
+
+
+class QrCode(TimeStampedModel):
+    class UrlCreateVia(models.TextChoices):
+        WEBSITE = "web"
+        TELEGRAM = "telegram"
+
+    def rand_letter():
+        str_pool = string.ascii_letters
+        return random.choice(str_pool).lower()
+
+    nick_name = models.CharField(max_length=100)
+    prefix = models.CharField(max_length=50, default=rand_letter)
+    creator = models.ForeignKey(Users, on_delete=models.CASCADE)
+    target_url = models.CharField(max_length=2000)
+    click = models.BigIntegerField(default=0)
+    qr_img = models.ImageField(upload_to="./media")
+    create_via = models.CharField(max_length=8, choices=UrlCreateVia.choices, default=UrlCreateVia.WEBSITE)
+    expired_at = models.DateTimeField(null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=[
+                    "prefix",
+                ]
+            ),
+        ]
+
+    def clicked(self):
+        self.click += 1
+        self.save()
+        return self

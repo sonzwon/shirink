@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,7 @@ from shortener.models import Users
 
 # Create your views here.
 def index(request):
-    return render(request, "base.html", {"welcome_msg": "HELLO"})
+    return render(request, "index.html", {"welcome_msg": "HELLO"})
 
 
 @csrf_exempt
@@ -43,30 +43,30 @@ def register(request):
 
 def login_view(request):
     is_ok = False
-    if request.user.is_authenticated:
-        return redirect("index")
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password")
             remember_me = form.cleaned_data.get("remember_me")
-            msg = "올바른 이메일과 패스워드를 입력하세요."
+            msg = "올바른 유저ID와 패스워드를 입력하세요."
             try:
-                u = Users.objects.get(user__email=email)
+                user = Users.objects.get(user__email=email)
             except Users.DoesNotExist:
                 pass
             else:
-                if u.user.check_password(raw_password):
+                if user.user.check_password(raw_password):
                     msg = None
-                    login(request, u.user)
+                    login(request, user.user)
                     is_ok = True
                     request.session["remember_me"] = remember_me
                     return redirect("index")
     else:
         msg = None
         form = LoginForm()
-        return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
+        if request.user.is_authenticated:
+            return redirect("index")
+    return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 
 def logout_view(request):

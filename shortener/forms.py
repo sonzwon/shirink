@@ -1,11 +1,11 @@
 from urllib.parse import urlparse
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from shortener.models import Users, ShortenedUrls
+from shortener.models import Users, ShortenedUrls, QrCode
 from django.contrib.auth.models import User
 from django.forms.widgets import Widget
 from django.utils.translation import gettext_lazy as _
-from shortener.utils import url_count_changer
+from shortener.utils import url_count_changer, create_qr
 from django.db.models import F
 
 
@@ -73,3 +73,39 @@ class UrlCreateForm(forms.ModelForm):
         ShortenedUrls.objects.filter(pk=url_id, creator_id=request.user.id).update(
             target_url=instance.target_url, nick_name=instance.nick_name
         )
+
+
+class QRCreateForm(forms.ModelForm):
+    class Meta:
+        model = QrCode
+        fields = ["nick_name", "target_url"]
+        labels = {
+            "nick_name": _("별칭"),
+            "target_url": _("URL"),
+        }
+        widgets = {
+            "nick_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "URL을 구분하기 위한 별칭"}),
+            "target_url": forms.TextInput(attrs={"class": "form-control", "placeholder": "포워딩될 URL"}),
+        }
+
+    def save(self, request, commit=True):
+        instance = super(QRCreateForm, self).save(commit=False)
+        instance.creator_id = request.user.id
+        instance.target_url = instance.target_url.strip()
+        instance.qr_img = create_qr(instance.nick_name, instance.target_url)
+        instance.qr_img.save(f"./media/{request.user.id}_{instance.nick_name}.png")
+        if commit:
+            try:
+                instance.save()
+            except Exception as e:
+                print(e)
+            else:
+                url_count_changer(request, True)
+        return instance
+
+
+#     def update_form(self, request, url_id):
+#         instance = super(QRCreateForm, self).save(commit=False)
+#         instance.target_url = instance.target_url.strip()
+#         ShortenedQR.objects.filter(pk=url_id, creator_id=request.user.id).update(
+#             target_url=instance.target_url, nick_name=instance.nick_name)

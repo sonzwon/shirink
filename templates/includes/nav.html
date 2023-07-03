@@ -1,6 +1,6 @@
   {% load static %}
   <!-- Sidenav -->
-  <aside class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white border-0 border-redius-xl" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white border-0 border-redius-xl">
     <!-- Brand -->
     <div class="sidenav-header d-flex align-items-center">
       <a class="navbar-brand m-0" href="{% url 'index' %}">
@@ -23,6 +23,12 @@
                   <a href="{% url 'url_list' %}" class="nav-link">
                     <span class="sidenav-mini-icon">L</span>
                     <span class="sidenav-normal">URL List</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'qr_list' %}" class="nav-link">
+                    <span class="sidenav-mini-icon">L</span>
+                    <span class="sidenav-normal">QR List</span>
                   </a>
                 </li>
                 <li class="nav-item">

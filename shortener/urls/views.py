@@ -1,6 +1,6 @@
-from shortener.utils import url_count_changer, get_kst
+from shortener.utils import url_count_changer, get_kst, create_qr
 from shortener.models import ShortenedUrls, Statistic, TrackingParams
-from shortener.forms import UrlCreateForm
+from shortener.forms import UrlCreateForm, QRCreateForm
 from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -33,7 +33,7 @@ def url_redirect(request, prefix, url):
 
 
 def url_list(request):
-    command_handler()
+    # command_handler()
     return render(request, "url_list.html", {})
     # get_list = ShortenedUrls.objects.order_by("-created_at").filter(creator_id=request.user.id).all()
     # return render(request, "url_list.html", {"list": get_list})
@@ -90,20 +90,43 @@ def url_change(request, action, url_id):
     return redirect("url_list")
 
 
+@login_required
 def statistic_view(request, url_id: int):
     url_info = get_object_or_404(ShortenedUrls, pk=url_id)
-    base_qs = Statistic.objects.filter(shortened_url_id=url_id)
+    base_qs = Statistic.objects.filter(shortened_url_id=url_id, created_at__gte=get_kst() - timedelta(days=14))
     clicks = (
         base_qs.values("created_at__date")
         .annotate(clicks=Count("id"))
         .values("created_at__date", "clicks")
         .order_by("created_at__date")
     )
-    print(f"clicks: {clicks}")
+    url_info = ShortenedUrls.objects.filter(pk=url_id).prefetch_related("trackingparams_set").first()
     date_list = [c.get("created_at__date").strftime("%Y-%m-%d") for c in clicks]
     click_list = [c.get("clicks") for c in clicks]
+    stats = Statistic.objects.filter(shortened_url_id=url_id).all()
     return render(
         request,
         "statistics.html",
-        {"url": url_info, "kst": get_kst(), "date_list": date_list, "click_list": click_list},
+        {"url": url_info, "kst": get_kst(), "date_list": date_list, "click_list": click_list, "stats": stats},
     )
+
+
+def qr_list(request):
+    return render(request, "qr_list.html", {})
+
+
+def qr_show(request):
+    return render(request, "qr_show.html", {})
+
+
+def qr_create(request):
+    msg = None
+    if request.method == "POST":
+        form = QRCreateForm(request.POST)
+        if form.is_valid():
+            messages.add_message(request, messages.INFO, msg)
+            form.save(request)
+            return redirect("qr_list")
+    else:
+        form = QRCreateForm()
+    return render(request, "qr_create.html", {"form": form})

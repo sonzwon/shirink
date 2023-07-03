@@ -1,6 +1,12 @@
 from shortener.utils import *
-from shortener.models import ShortenedUrls, Users, Statistic
-from shortener.urls.serializers import UrlListSerializer, UrlCreateSerializer, BrowerStatSerializer
+from shortener.models import ShortenedUrls, Users, Statistic, QrCode
+from shortener.urls.serializers import (
+    UrlListSerializer,
+    UrlCreateSerializer,
+    BrowerStatSerializer,
+    QrListSerializer,
+    QrCreateSerializer,
+)
 from django.contrib.auth.models import User, Group
 from rest_framework.decorators import renderer_classes, action
 from rest_framework.renderers import JSONRenderer
@@ -85,3 +91,16 @@ class UrlListView(viewsets.ModelViewSet):
         serializer = BrowerStatSerializer(browers, many=True)
 
         return Response(serializer.data)
+
+
+class QrListView(viewsets.ModelViewSet):
+    queryset = QrCode.objects.order_by("-created_at")
+    serializer_class = QrListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request):
+        # POST METHOD
+        serializer = QrCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            rtn = serializer.create(request, serializer.data)
+            return Response(QrListSerializer(rtn).data, status=status.HTTP_201_CREATED)

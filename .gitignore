@@ -7,3 +7,4 @@ __pycache__/
 /shrinkers/service_key.json
 .github/workflows/main.yml
 /shrinkers/telegram_access_token.json
+.gcloudignore

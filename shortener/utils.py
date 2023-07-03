@@ -3,7 +3,6 @@ from django.db.models import F
 from rest_framework.response import Response
 from datetime import datetime, timedelta
 import yagmail
-from shrinkers.settings import EMAIL_ID, EMAIL_PW
 
 
 def url_count_changer(request, is_increase: bool):
@@ -40,3 +39,12 @@ def send_email(**kwargs):
         yag = yagmail.SMTP({EMAIL_ID: "shrinkers X sonzwon"}, EMAIL_PW)
         contents = [email_content.format(mailing_list[0])] if not content else content
         yag.send(mailing_list[1], "안녕하세요, 첫 이메일 입니다.", content)
+
+
+import qrcode
+
+
+def create_qr(nick_name, target_url):
+    img = qrcode.make(target_url)
+    # img.save(f"./media/{nick_name}.png")
+    return img
