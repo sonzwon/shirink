@@ -42,6 +42,7 @@ class Users(models.Model):
     full_name = models.CharField(max_length=100, null=True)
     telegram_username = models.CharField(max_length=100, null=True)
     url_count = models.IntegerField(default=0)
+    qr_count = models.IntegerField(default=0)
     organization = models.ForeignKey(Organization, on_delete=models.DO_NOTHING, null=True)
 
 
@@ -174,6 +175,7 @@ class QrCode(TimeStampedModel):
         return random.choice(str_pool).lower()
 
     nick_name = models.CharField(max_length=100)
+    category = models.ForeignKey(Categories, on_delete=models.DO_NOTHING, null=True)
     prefix = models.CharField(max_length=50, default=rand_letter)
     creator = models.ForeignKey(Users, on_delete=models.CASCADE)
     target_url = models.CharField(max_length=2000)

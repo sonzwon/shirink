@@ -1,5 +1,5 @@
 from shortener.utils import url_count_changer, get_kst, create_qr
-from shortener.models import ShortenedUrls, Statistic, TrackingParams
+from shortener.models import ShortenedUrls, Statistic, TrackingParams, QrCode
 from shortener.forms import UrlCreateForm, QRCreateForm
 from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
@@ -39,7 +39,7 @@ def url_list(request):
     # return render(request, "url_list.html", {"list": get_list})
 
 
-@login_required
+# @login_required
 def url_create(request):
     msg = None
     if request.method == "POST":
@@ -56,7 +56,7 @@ def url_create(request):
     return render(request, "url_create.html", {"form": form})
 
 
-@login_required
+# @login_required
 def url_change(request, action, url_id):
     if request.method == "POST":
         url_data = ShortenedUrls.objects.filter(id=url_id)
@@ -90,7 +90,7 @@ def url_change(request, action, url_id):
     return redirect("url_list")
 
 
-@login_required
+# @login_required
 def statistic_view(request, url_id: int):
     url_info = get_object_or_404(ShortenedUrls, pk=url_id)
     base_qs = Statistic.objects.filter(shortened_url_id=url_id, created_at__gte=get_kst() - timedelta(days=14))
@@ -109,6 +109,25 @@ def statistic_view(request, url_id: int):
         "statistics.html",
         {"url": url_info, "kst": get_kst(), "date_list": date_list, "click_list": click_list, "stats": stats},
     )
+
+
+def qr_redirect(request, prefix):
+    was_limited = getattr(request, "limited", False)
+    if was_limited:
+        return redirect("index")
+    get_url = get_object_or_404(QrCode, prefix=prefix)
+    is_permanent = False
+    target = get_url.target_url
+    print(f"get_qr: {target}")
+    if get_url.creator.organization:
+        is_permanent = True
+    if not target.startswith("https://") and not target.startswith("http://"):
+        target = "https://" + get_url.target_url
+    custom_params = request.GET.dict() if request.GET.dict() else None
+    print(f"custom_params: {request.GET}")
+    history = Statistic()
+    history.record(request, get_url, custom_params)
+    return redirect(target, permanent=is_permanent)
 
 
 def qr_list(request):

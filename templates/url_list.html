@@ -74,14 +74,15 @@
         methods: {
             getList: function () {
                 $("#vue_div").LoadingOverlay("show");
-                axios.get(`/api/urls/`,
-                ).then(function (response) {
-                    vm.urlLists = response.data
-                }).catch(function (e) {
-                }).finally(function () {
-                $("#vue_div").LoadingOverlay("hide");
-                });
-            },
+                axios.get(`/api/urls/`).
+                then(function (response) {
+                    vm.urlLists = response.data;
+                    console.log(vm.urlLists);
+                    }).catch(function (e) {
+                    }).finally(function () {
+                    $("#vue_div").LoadingOverlay("hide");
+                    });
+                },
             deleteUrl: function (urlId) {
                 const c = confirm('정말 삭제 하시겠습니까?');
                 if (!c) return;
