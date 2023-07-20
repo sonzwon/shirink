@@ -27,22 +27,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="l in qrLists">
+                        <tr v-for="l in qrList">
                             <th scope="row">[[l.nick_name]]</th>
                             <td>[[l.target_url]]</td>
                             <td>
-                                <button type="button" onclick="modal()">qrcode</button>
+                                <button type="button" v-on:click="showModal(l)">qrcode</button>
                 
                                 <!-- Modal -->
                                 <div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content" >
-                                    <div class="modal-header" >
-                                        <h5 class="modal-title" id="title"></h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="modal-header">
+                                        [[modalTitle]]
                                     </div>
                                     <div class="modal-body" id="content">
-                                        큐알 이미지를 넣어보아요
+                                        <img :scr="modalContent">
                                     </div>
                                     </div>
                                 </div>
@@ -57,7 +56,7 @@
                                 </a>
                             </td>
                             <td>
-                                <button  class="btn btn-sm btn-primary">
+                                <button class="btn btn-sm btn-primary">
                                     수정
                                 </button>
                                 <button @click="deleteQr(l.id)" class="btn btn-sm btn-danger" >
@@ -72,68 +71,42 @@
     </div>
 </div>
 <script>
-
-//QR 리스트 가져오기
-    const qrList = [];
-    let nicknameList = [];
-    function getQrList(){
-        axios.get(`/api/qrs/`)
-            .then(function (response) {
-                qrList.push(response.data);
-                console.log('qrList',qrList[0])
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-            });
-    }
-//QR 닉네임 가져오기
-    function getNickname(){
-        const list = qrList[0]
-        var l = keys(list).length;
-        console.log('length', l);
-        for(i=0; i<l; i++) {
-            nicknameList.push(list[i]['nick_name']);
-        }
-        console.log('nickname', nicknameList);
-    }
-// 모달에 적용하기
-    function modal(){
-        for(i=0; i<nicknameList.length; i++){
-            let mt = document.getElementById("title");
-            mt.innerHTML(nicknameList[i]);
-        }
-        $("#myModal").modal("show");
-    }
-
-</script>
-<script>
     let vm = new Vue({
         delimiters: ["[[","]]"],
         el: "#vue_div",
         data: {
-            newQrName: null,
-            newQrTarget: null,
-            qrLists: [],
-            qrNickname: []
+            qrList: {},
+            nicknameList: [],
+            modalTitle: null,
+            modalContent: null
         },
         mounted() {
             this.getList();
         },
         methods: {
+            //QR리스트 받아오기
             getList: function () {
                 $("#vue_div").LoadingOverlay("show");
-                axios.get(`/api/qrs/`).
-                then(function (response) {
-                    vm.qrLists = response.data;
-                    console.log(vm.qrLists[0]);
-                    }).catch(function (e) {
-                    }).finally(function () {
-                    $("#vue_div").LoadingOverlay("hide");
+                axios.get(`/api/qrs/`)
+                    .then(function (response) {
+                        vm.qrList = response.data;
+                        console.log('qrList :', vm.qrList, typeof(vm.qrList), Object.keys(vm.qrList).length);
+                        var l = Object.keys(vm.qrList).length;
+                        console.log("l :", l);
+                        for(i=0; i<l; i++){
+                            vm.nicknameList.push(vm.qrList[i]['nick_name']);
+                        }
+                        console.log('nicknameList :', vm.nicknameList);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                    .then(function () {
+                        $("#vue_div").LoadingOverlay("hide");
                     });
                 },
-            deleteQr: function (urlId) {
+            //QR리스트 삭제
+            deleteQr: function (qrId) {
                 const c = confirm('정말 삭제 하시겠습니까?');
                 if (!c) return;
                 axios.delete(`/api/qrs/${qrId}`, {headers: {'X-CSRFToken': Cookies.get('csrftoken')}})
@@ -143,7 +116,18 @@
                     vm.getList();
                     });
                 },
-            }
+            // 모달창
+            showModal: function (target) {
+                $("#myModal").modal("show");
+                //modaltitle 
+                vm.modalTitle = target['nick_name'];
+                var creatorId = target['creator']['id']
+                vm.modalContent = `./media/${creatorId}_${vm.modalTitle}.png`
+                console.log("modaltitle :", vm.modalTitle);
+                console.log("modalcontent :", vm.modalContent);
+                //modalcontents
+               },
+            },
     })
 </script>
 {% endblock %}

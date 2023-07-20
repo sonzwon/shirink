@@ -8,6 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from shortener.utils import url_count_changer, create_qr
 from django.db.models import F
 
+import qrcode
+
 
 class RegisterForm(UserCreationForm):
     full_name = forms.CharField(max_length=30, required=False, help_text="Optional.", label="이름")
@@ -92,15 +94,8 @@ class QRCreateForm(forms.ModelForm):
         instance = super(QRCreateForm, self).save(commit=False)
         instance.creator_id = request.user.id
         instance.target_url = instance.target_url.strip()
-        instance.qr_img = create_qr(instance.nick_name, instance.target_url)
-        instance.qr_img.save(f"./media/{request.user.id}_{instance.nick_name}.png")
-        if commit:
-            try:
-                instance.save()
-            except Exception as e:
-                print(e)
-            else:
-                url_count_changer(request, True)
+        instance.qr_img = create_qr(instance.creator_id, instance.nick_name, instance.target_url)
+        instance.save()
         return instance
 
 

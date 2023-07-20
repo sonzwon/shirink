@@ -111,23 +111,23 @@ def statistic_view(request, url_id: int):
     )
 
 
-def qr_redirect(request, prefix):
-    was_limited = getattr(request, "limited", False)
-    if was_limited:
-        return redirect("index")
-    get_url = get_object_or_404(QrCode, prefix=prefix)
-    is_permanent = False
-    target = get_url.target_url
-    print(f"get_qr: {target}")
-    if get_url.creator.organization:
-        is_permanent = True
-    if not target.startswith("https://") and not target.startswith("http://"):
-        target = "https://" + get_url.target_url
-    custom_params = request.GET.dict() if request.GET.dict() else None
-    print(f"custom_params: {request.GET}")
-    history = Statistic()
-    history.record(request, get_url, custom_params)
-    return redirect(target, permanent=is_permanent)
+# def qr_redirect(request, prefix):
+#     was_limited = getattr(request, "limited", False)
+#     if was_limited:
+#         return redirect("index")
+#     get_url = get_object_or_404(QrCode, prefix=prefix)
+#     is_permanent = False
+#     target = get_url.target_url
+#     print(f"get_qr: {target}")
+#     if get_url.creator.organization:
+#         is_permanent = True
+#     if not target.startswith("https://") and not target.startswith("http://"):
+#         target = "https://" + get_url.target_url
+#     custom_params = request.GET.dict() if request.GET.dict() else None
+#     print(f"custom_params: {request.GET}")
+#     history = Statistic()
+#     history.record(request, get_url, custom_params)
+#     return redirect(target, permanent=is_permanent)
 
 
 def qr_list(request):
@@ -139,11 +139,9 @@ def qr_show(request):
 
 
 def qr_create(request):
-    msg = None
     if request.method == "POST":
         form = QRCreateForm(request.POST)
         if form.is_valid():
-            messages.add_message(request, messages.INFO, msg)
             form.save(request)
             return redirect("qr_list")
     else:

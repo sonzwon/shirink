@@ -1,4 +1,5 @@
 from shortener.models import ShortenedUrls, Users
+from django.contrib.auth.models import User
 from django.db.models import F
 from rest_framework.response import Response
 from datetime import datetime, timedelta
@@ -47,9 +48,18 @@ def send_email(**kwargs):
 
 
 import qrcode
+from urllib import parse
 
 
-def create_qr(nick_name, target_url):
+# def create_qr(nick_name, target_url):
+#     img = qrcode.make(target_url)
+#     file_name = f"./media/{User.id}_{nick_name}.png"
+#     img.save(file_name)
+#     return file_name
+
+
+def create_qr(creator_id, nick_name, target_url):
     img = qrcode.make(target_url)
-    # img.save(f"./media/{nick_name}.png")
-    return img
+    file_name = f"{creator_id}_{nick_name}.png"
+    img.save("./media/" + file_name)
+    return parse.quote(file_name)

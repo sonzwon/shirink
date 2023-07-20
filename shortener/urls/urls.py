@@ -5,6 +5,8 @@ from shortener.urls.views import url_list, url_create, url_change, statistic_vie
 
 from rest_framework import routers
 from shortener.urls.apis import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 router.register(r"urls", UrlListView)
@@ -18,4 +20,4 @@ urlpatterns = [
     path("qrshow/", qr_show, name="qr_show"),
     path("<str:action>/<int:url_id>", url_change, name="url_change"),
     path("<int:url_id>/statistic", statistic_view, name="statistic_view"),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
