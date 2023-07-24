@@ -20,4 +20,6 @@ urlpatterns = [
     path("qrshow/", qr_show, name="qr_show"),
     path("<str:action>/<int:url_id>", url_change, name="url_change"),
     path("<int:url_id>/statistic", statistic_view, name="statistic_view"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

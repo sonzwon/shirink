@@ -38,10 +38,10 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content" >
                                     <div class="modal-header">
-                                        [[modalTitle]]
+                                        <h3>[[modalTitle]]</h3>
                                     </div>
                                     <div class="modal-body" id="content">
-                                        <img :scr="modalContent">
+                                        <img src="{% static '1_야놀자.png' %}">
                                     </div>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
             qrList: {},
             nicknameList: [],
             modalTitle: null,
-            modalContent: null
+            modalContent: null,
         },
         mounted() {
             this.getList();
@@ -122,10 +122,14 @@
                 //modaltitle 
                 vm.modalTitle = target['nick_name'];
                 var creatorId = target['creator']['id']
-                vm.modalContent = `./media/${creatorId}_${vm.modalTitle}.png`
+                vm.modalContent = `${creatorId}_${vm.modalTitle}.png`
                 console.log("modaltitle :", vm.modalTitle);
                 console.log("modalcontent :", vm.modalContent);
                 //modalcontents
+                // var img = document.createElement("img");
+                // img.setAttribute("src", `C:Users/sby04/shrinkers/media/${vm.modalContent}`);
+                // img.setAttribute("alt", `${vm.modalTitle}.png`)
+                // document.getElementById("content").innerHTML = img;
                },
             },
     })

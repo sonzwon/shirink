@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from google.oauth2 import service_account
 import json
+from .keys import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +29,7 @@ print(MEDIA_ROOT)
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-^t&8llcw@&v$8ty2nav0raz##z3oaklox7(px7dwh)br@j=s%o"
+SECRET_KEY = SECRET_KEY_A
 
 # SECURITY WARNING: don't run with debug turned on in production!
 ENV = os.environ.get("DJANGO_ENV", "dev")
@@ -46,6 +47,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
+    "django.contrib.sites",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -54,7 +56,27 @@ INSTALLED_APPS = [
     "django_user_agents",
     "rest_framework",
     "drf_yasg",
+    # allauth
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    # provider
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
 ]
+
+
+SITE_ID = 1
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        "APP": {"client_id": "123", "secret": "456", "key": ""}
+    }
+}
 
 
 REST_FRAMEWORK = {
@@ -121,7 +143,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "app_db",
         "USER": "root",
-        "PASSWORD": "ok743434",
+        "PASSWORD": DB_PASSWORD,
         "HOST": "34.64.254.216",
         "PORT": 3306,
         "OPTIONS": {"autocommit": True, "charset": "utf8mb4"},

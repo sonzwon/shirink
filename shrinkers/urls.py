@@ -55,6 +55,7 @@ urlpatterns = [
     path("api/", include(url_router.urls)),
     path("ninja-api/", apis.urls),
     path("<str:prefix>/<str:url>", url_redirect),
+    path("accounts/", include("allauth.urls")),
 ]
 
 # if DEBUG:

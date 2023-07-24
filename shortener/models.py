@@ -180,7 +180,7 @@ class QrCode(TimeStampedModel):
     creator = models.ForeignKey(Users, on_delete=models.CASCADE)
     target_url = models.CharField(max_length=2000)
     click = models.BigIntegerField(default=0)
-    qr_img = models.ImageField(upload_to="./media/", blank=True, null=True)
+    qr_img = models.ImageField(upload_to="./media", blank=True, null=True)
     create_via = models.CharField(max_length=8, choices=UrlCreateVia.choices, default=UrlCreateVia.WEBSITE)
     expired_at = models.DateTimeField(null=True)
 
