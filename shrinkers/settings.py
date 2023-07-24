@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from google.oauth2 import service_account
 import json
-from .keys import *
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +29,7 @@ print(MEDIA_ROOT)
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY_A = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("SECRET_KEY_A")
 SECRET_KEY = SECRET_KEY_A
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -137,13 +138,13 @@ WSGI_APPLICATION = "shrinkers.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+db_password = json.load(open(os.path.join(BASE_DIR, "keys.json"))).get("DB_PASSWORD")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "app_db",
         "USER": "root",
-        "PASSWORD": DB_PASSWORD,
+        "PASSWORD": db_password,
         "HOST": "34.64.254.216",
         "PORT": 3306,
         "OPTIONS": {"autocommit": True, "charset": "utf8mb4"},

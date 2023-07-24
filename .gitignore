@@ -8,4 +8,4 @@ __pycache__/
 .github/workflows/main.yml
 /shrinkers/telegram_access_token.json
 .gcloudignore
-/shrinkers/keys.py
+/shrinkers/keys.json
